@@ -15,6 +15,7 @@ class CarAdmin(admin.ModelAdmin):
 @admin.register(Cargo)
 class CargoAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "pick_up_location",
         "delivery_location",
         "weight",

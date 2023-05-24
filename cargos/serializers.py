@@ -1,0 +1,38 @@
+from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
+
+from cargos.models import Car, Cargo, Location
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["city", "state", "zip_code", "latitude", "longitude"]
+
+
+class CargoSerializer(serializers.ModelSerializer):
+    pick_up_location = LocationSerializer()
+    delivery_location = LocationSerializer()
+
+    class Meta:
+        model = Cargo
+        fields = ["id", "pick_up_location", "delivery_location", "weight",
+                  "description"]
+
+
+class CargoCreateSerializer(serializers.ModelSerializer):
+    pick_up_location = serializers.CharField(max_length=5)
+    delivery_location = serializers.CharField(max_length=5)
+
+    def validate_pick_up_location(self, value):
+        location = get_object_or_404(Location, zip_code=value)
+        return location
+
+    def validate_delivery_location(self, value):
+        location = get_object_or_404(Location, zip_code=value)
+        return location
+
+    class Meta:
+        model = Cargo
+        fields = ['pick_up_location', 'delivery_location', 'weight',
+                  'description']
