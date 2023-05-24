@@ -10,6 +10,9 @@ class Location(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
+    def __str__(self):
+        return self.zip_code
+
 
 class Cargo(models.Model):
     pick_up_location = models.ForeignKey(Location, on_delete=models.CASCADE,
