@@ -6,7 +6,7 @@ app_name = "cargos"
 
 router = DefaultRouter()
 
-router.register("cargos", CargoViewSet, basename="cargos")
+router.register("cargos", CargoViewSet)
 
 urlpatterns = [
     path("", include(router.urls))

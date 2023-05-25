@@ -2,20 +2,19 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 
 from .models import Cargo, Location, Car
-from .serializers import CargoSerializer, CargoCreateSerializer
+from .serializers import (CargoSerializer, CargoCreateSerializer,
+                          CargoUpdateSerializer)
 
 
 class CargoViewSet(viewsets.ModelViewSet):
     queryset = Cargo.objects.all()
-    serializer_class = CargoSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = CargoCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers=headers)
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return CargoSerializer
+        if self.request.method == 'PUT':
+            return CargoUpdateSerializer
+        return CargoCreateSerializer
 
     # def list(self, request):
     #     queryset = self.filter_queryset(self.get_queryset())
@@ -60,13 +59,13 @@ class CargoViewSet(viewsets.ModelViewSet):
     #
     #     return Response(cargo_data)
     #
-    # def update(self, request, pk=None):
-    #     cargo = self.get_object()
-    #     serializer = self.get_serializer(cargo, data=request.data,
-    #                                      partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     return Response(serializer.data)
+    def update(self, request, pk=None):
+        cargo = self.get_object()
+        serializer = self.get_serializer(cargo, data=request.data,
+                                         partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
     #
     # def destroy(self, request, *args, **kwargs):
     #     cargo = self.get_object()
