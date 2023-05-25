@@ -2,12 +2,19 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
 from cargos.models import Car, Cargo, Location
+from .utils import calculate_distance
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ["city", "state", "zip_code", "latitude", "longitude"]
+
+
+class CarSerializer(serializers.ModelSerializer):
+    # distance_to_cargo =
+    class Meta:
+        model = Car
 
 
 class CargoSerializer(serializers.ModelSerializer):

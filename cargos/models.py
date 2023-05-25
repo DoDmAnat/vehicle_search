@@ -26,8 +26,8 @@ class Cargo(models.Model):
 
 class Car(models.Model):
     number = models.CharField(max_length=5, unique=True, validators=[
-        RegexValidator(regex=r"^.*$",
-                       message="Допускаются только буквы и цифры")])
+        RegexValidator(regex=r"^[1-9]\d{3}[A-Z]$",
+                       message="Номер в формате 1111A, 9999Z")])
     current_location = models.ForeignKey(Location, on_delete=models.CASCADE,
                                          related_name="cars")
     load_capacity = models.IntegerField(

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Cargo, Location, Car
 from .serializers import (CargoSerializer, CargoCreateSerializer,
                           CargoUpdateSerializer)
+from .utils import get_nearest_cars
 
 
 class CargoViewSet(viewsets.ModelViewSet):
@@ -16,24 +17,19 @@ class CargoViewSet(viewsets.ModelViewSet):
             return CargoUpdateSerializer
         return CargoCreateSerializer
 
-    # def list(self, request):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #
-    #     # Получение списка грузов с локациями pick-up и delivery
-    #     serializer = self.get_serializer(queryset, many=True)
-    #     cargos_data = serializer.data
-    #
-    #     # Добавление количества ближайших машин до груза ( =< 450 миль)
-    #     for cargo_data in cargos_data:
-    #         pick_up_location = Location.objects.get(
-    #             pk=cargo_data['pick_up_location'])
-    #         num_close_cars = Car.objects.filter(
-    #             current_location__distance_lte=(
-    #             pick_up_location.point, D(mi=450))
-    #         ).count()
-    #         cargo_data['num_close_cars'] = num_close_cars
-    #
-    #     return Response(cargos_data)
+    def list(self, request, *args, **kwargs):
+        cargos = self.get_queryset()
+        serializer = self.get_serializer(cargos, many=True)
+        data = serializer.data
+
+        cars = Car.objects.all()
+
+        for cargo in data:
+            cargo_obj = Cargo.objects.get(id=cargo['id'])
+            nearest_cars_count = get_nearest_cars(cargo_obj, cars)
+            cargo['nearest_cars_count'] = nearest_cars_count
+
+        return Response(data)
 
     # def retrieve(self, request, pk=None):
     #     cargo = self.get_object()
