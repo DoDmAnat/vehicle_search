@@ -1,10 +1,11 @@
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from .models import Cargo, Location, Car
+from .models import Cargo, Car
 from .serializers import (CargoSerializer, CargoCreateSerializer,
-                          CargoUpdateSerializer)
-from .utils import get_nearest_cars
+                          CargoUpdateSerializer, CarSerializer)
+from .utils import get_nearest_cars, get_all_cars_distance
 
 
 class CargoViewSet(viewsets.ModelViewSet):
@@ -13,7 +14,7 @@ class CargoViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return CargoSerializer
-        if self.request.method == 'PUT':
+        if self.request.method in ('PUT', 'PATCH'):
             return CargoUpdateSerializer
         return CargoCreateSerializer
 
@@ -31,39 +32,21 @@ class CargoViewSet(viewsets.ModelViewSet):
 
         return Response(data)
 
-    # def retrieve(self, request, pk=None):
-    #     cargo = self.get_object()
-    #     serializer = self.get_serializer(cargo)
-    #
-    #     # Получение списка номеров всех машин и их расстояний до выбранного груза
-    #     cars = Car.objects.all()
-    #     car_distances = []
-    #     for car in cars:
-    #         distance = geodesic(
-    #             (
-    #             car.current_location.latitude, car.current_location.longitude),
-    #             (cargo.pick_up_location.latitude,
-    #              cargo.pick_up_location.longitude)
-    #         ).miles
-    #         car_distances.append({
-    #             'number': car.number,
-    #             'distance': distance
-    #         })
-    #
-    #     cargo_data = serializer.data
-    #     cargo_data['car_distances'] = car_distances
-    #
-    #     return Response(cargo_data)
-    #
-    def update(self, request, pk=None):
+    def retrieve(self, request, pk=None):
         cargo = self.get_object()
-        serializer = self.get_serializer(cargo, data=request.data,
-                                         partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
-    #
-    # def destroy(self, request, *args, **kwargs):
-    #     cargo = self.get_object()
-    #     self.perform_destroy(cargo)
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = self.get_serializer(cargo)
+        data = serializer.data
+
+        cars = Car.objects.all()
+        car_distances = get_all_cars_distance(cargo, cars)
+
+        cargo_data = serializer.data
+        cargo_data['car_distances'] = car_distances
+        data['car_distances'] = car_distances
+
+        return Response(data)
+
+
+class CarViewSet(viewsets.ModelViewSet):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer

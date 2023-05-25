@@ -13,6 +13,19 @@ def get_nearest_cars(cargo, cars):
     for car in cars:
         current_location = car.current_location
         dist = calculate_distance(pick_up_location, current_location)
-        if dist <= 450:
+        if dist <= 450 and car.load_capacity >= cargo.weight:
             count += 1
     return count
+
+
+def get_all_cars_distance(cargo, cars):
+    pick_up_location = cargo.pick_up_location
+    car_distances = []
+    for car in cars:
+        current_location = car.current_location
+        dist = calculate_distance(pick_up_location, current_location)
+        car_distances.append({
+            'car_number': car.number,
+            'distance': dist
+        })
+    return car_distances

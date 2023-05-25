@@ -2,7 +2,6 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
 from cargos.models import Car, Cargo, Location
-from .utils import calculate_distance
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -12,9 +11,17 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class CarSerializer(serializers.ModelSerializer):
-    # distance_to_cargo =
+
+    def update(self, instance, validated_data):
+        zip_code = validated_data.get('zip_code')
+        if zip_code:
+            new_location = get_object_or_404(Location, zip_code=zip_code)
+            instance.current_location = new_location
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Car
+        fields = "__all__"
 
 
 class CargoSerializer(serializers.ModelSerializer):
