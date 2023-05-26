@@ -4,7 +4,7 @@ from cargos.models import Location
 
 
 class Command(BaseCommand):
-    help = 'Load locations from uszips.csv file'
+    help = 'Загрузка локаций из файла uszips.csv'
 
     def handle(self, *args, **options):
         with open('uszips.csv', 'r') as csvfile:

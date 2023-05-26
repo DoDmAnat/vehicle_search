@@ -64,8 +64,8 @@ class CargoUpdateSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=255)
 
     def update(self, instance, validated_data):
-        instance.weight = validated_data.get('weight', instance.weight)
-        instance.description = validated_data.get('description',
-                                                  instance.description)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
+        instance.refresh_from_db()
         return instance

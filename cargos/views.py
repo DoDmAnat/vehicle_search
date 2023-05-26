@@ -1,6 +1,5 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 
 from .models import Cargo, Car
 from .serializers import (CargoSerializer, CargoCreateSerializer,
