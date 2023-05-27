@@ -69,6 +69,18 @@
 ----
 
 ### Как запустить проект
+#### Создать .env в корне проекта
+```
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=host.docker.internal
+DB_PORT=5432
+```
+#### Выполнить команду 
+```bash
+docker compose up --build 
+```
 
 ### Примеры запросов:
 
