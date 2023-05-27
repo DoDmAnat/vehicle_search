@@ -1,6 +1,3 @@
-import os
-from pathlib import Path
-
 import environ
 
 root = environ.Path(__file__) - 2
@@ -14,7 +11,7 @@ SECRET_KEY = 'django-insecure-+6e9h_gkbp4k54&cj7=e+!38^ka4v4n6x(qq=zhjatilm@#$(@
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
 INSTALLED_APPS = [
@@ -65,13 +62,9 @@ DATABASES = {
         "NAME": env.str("DB_NAME", "postgres"),
         "USER": env.str("POSTGRES_USER", "postgres"),
         "PASSWORD": env.str("POSTGRES_PASSWORD", "postgres"),
-        "HOST": env.str("DB_HOST", "db"),
+        "HOST": env.str("DB_HOST", "host.docker.internal"),
         "PORT": env.int("DB_PORT", 5432),
-    },
-    "extra": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    },
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
