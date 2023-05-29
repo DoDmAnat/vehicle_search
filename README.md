@@ -185,7 +185,7 @@ GET - http://localhost/api/cargos/<id>/
 #### - Редактирование груза по id
 
 ```
-POST - http://localhost/api/cargos/<id>/
+PATCH - http://localhost/api/cargos/<id>/
 ```
 ```json
 {
@@ -208,4 +208,29 @@ POST - http://localhost/api/cargos/<id>/
 
 ```
 DELETE - http://localhost/api/cargos/<id>/
+```
+#### - Редактирование машины по id
+
+```
+PATCH - http://localhost/api/cars/<id>/
+```
+```json
+{
+    "number": "7689N",
+    "load_capacity": 124,
+    "current_location": 11560
+}
+```
+
+
+#### Ответ
+
+```json
+{
+    "id": 1,
+    "number": "7689N",
+    "load_capacity": 124,
+    "current_location": 11560
+}
+
 ```

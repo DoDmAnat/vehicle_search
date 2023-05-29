@@ -35,4 +35,5 @@ class Command(BaseCommand):
                 current_location=random_location,
                 load_capacity=random.randint(1, 1000),
             )
+            print(car.current_location)
             car.save()
