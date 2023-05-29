@@ -74,7 +74,7 @@
 DB_NAME=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-DB_HOST=host.docker.internal
+DB_HOST=db
 DB_PORT=5432
 ```
 #### Выполнить команду 
